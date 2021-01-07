@@ -46,4 +46,41 @@ struct User {
                 "Batch": self.Batch,
                 "StudentID": self.StudentID]
     }
+    
+    func isNameEmpty() -> Bool {
+        // Leading, trailing whitespaces and newlines are ignored
+        return Name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    
+    func isStudentIDValid() -> Bool {
+        return StudentID.count == 4
+    }
+    
+    
+    func isBatchValid() -> Bool {
+        // Only allows batches from currentYear+1 to year+3
+        // eg. in 2020 it will allow 21.0 to 23.5
+        // eg. in 2021 it will allow 22.0 to 24.5
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let allowedBatches = [currentYear - 1999, currentYear - 1998, currentYear - 1997]
+        
+        let splitedUpBatch = Batch.split(separator: ".")
+        
+        if splitedUpBatch.count == 2 {
+            if allowedBatches.contains((splitedUpBatch[0] as NSString).integerValue) {
+                if [0, 5].contains((splitedUpBatch[1] as NSString).integerValue) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    
+    func isEmailValid() -> Bool {
+        let emailTest = NSPredicate(format: "SELF MATCHES %@",
+                                       "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
+        return emailTest.evaluate(with: Email)
+    }
 }

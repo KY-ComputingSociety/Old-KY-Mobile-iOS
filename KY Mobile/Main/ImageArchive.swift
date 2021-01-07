@@ -12,7 +12,7 @@ class ImageArchive: ObservableObject {
         self.archive = ["": UIImage()]
     }
     
-    func uiImageFromURL(id: String, url: String) -> UIImage {
+    func searchArchive(id: String, url: String) -> UIImage {
         if let uiImage = self.archive[id] {
             return uiImage
         } else {

@@ -30,7 +30,9 @@ struct ProfileView: View {
                         NavigationLink(destination: EditProfileView(currentUser: currentUser.currentUser,
                                                                     errorMessage: $errorMessage,
                                                                     showErrorMessage: $showErrorMessage,
-                                                                    isShowingEditProfile: $isShowingEditProfile), isActive: $isShowingEditProfile) {
+                                                                    isShowingEditProfile: $isShowingEditProfile,
+                                                                    editedUser: currentUser.currentUser),
+                                       isActive: $isShowingEditProfile) {
                             ProfileCardView(user: currentUser.currentUser)
                         }
                     }.textCase(nil)

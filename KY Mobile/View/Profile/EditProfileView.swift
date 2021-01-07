@@ -11,7 +11,7 @@ struct EditProfileView: View {
     
     @Binding var isShowingEditProfile: Bool
     
-    @State private var editedUser: User = User()
+    @State var editedUser: User
     @State private var newProfilePicture: UIImage = UIImage()
     @State private var isShowingImagePicker: Bool = false
     
@@ -40,42 +40,48 @@ struct EditProfileView: View {
                 }
                 
                 Section () {
-                    HStack {
-                        Text("Name")
-                        Spacer()
-                        Text(editedUser.Name)
-                            .foregroundColor(Color("NormalGrey"))
+                    
+                    NavigationLink(destination: editName) {
+                        HStack {
+                            Text("Name")
+                            Spacer()
+                            Text(editedUser.Name)
+                                .foregroundColor(Color("NormalGrey"))
+                        }
                     }
                     
-                    HStack {
-                        Text("Email")
-                        Spacer()
-                        Text(editedUser.Email)
-                            .foregroundColor(Color("NormalGrey"))
+                    NavigationLink(destination: editEmail) {
+                        HStack {
+                            Text("Email")
+                            Spacer()
+                            Text(editedUser.Email)
+                                .foregroundColor(Color("NormalGrey"))
+                        }
                     }
                     
-                    HStack {
-                        Text("Student ID")
-                        Spacer()
-                        Text(editedUser.StudentID)
-                            .foregroundColor(Color("NormalGrey"))
+                    NavigationLink(destination: editStudentID) {
+                        HStack {
+                            Text("Student ID")
+                            Spacer()
+                            Text(editedUser.StudentID)
+                                .foregroundColor(Color("NormalGrey"))
+                        }
                     }
                     
-                    HStack {
-                        Text("Batch")
-                        Spacer()
-                        Text(editedUser.Batch)
-                            .foregroundColor(Color("NormalGrey"))
+                    NavigationLink(destination: editBatch) {
+                        HStack {
+                            Text("Batch")
+                            Spacer()
+                            Text(editedUser.Batch)
+                                .foregroundColor(Color("NormalGrey"))
+                        }
                     }
                 }
             }.sheet(isPresented: $isShowingImagePicker, content: {
                 ImagePickerView(isPresented: $isShowingImagePicker,
                                 selectedImage: $newProfilePicture)
             })
-        }.onAppear(perform: {
-            editedUser = currentUser
-        })
-        .navigationBarItems(trailing: Button(action: {
+        }.navigationBarItems(trailing: Button(action: {
             if newProfilePicture != UIImage() {
                 // Delete previous image
                 FBStorage.deleteImage(location: "Users_ProfilePic",
@@ -106,7 +112,7 @@ struct EditProfileView: View {
                     }
                 }
             } else if !editedUser.equalTo(currentUser) {
-                print("Edited details of User")
+                print("Edited user is different from current user")
             }
             
             // Save new user's new details into Firestore
@@ -126,6 +132,67 @@ struct EditProfileView: View {
         }) {
             Text("Save")
         }.disabled((newProfilePicture == UIImage()) && editedUser.equalTo(currentUser)))
+    }
+    
+    var editName: some View {
+        NavigationView{
+            VStack (spacing: 0) {
+                TextField("Enter your full name", text: $editedUser.Name)
+                    .autocapitalization(.words)
+                    .frame(width: 300, height: 30)
+                
+                Divider()
+                    .frame(width: 300, height: 2)
+                    .background(editedUser.isNameEmpty() ? Color("VeryLightGrey") : Color("Green"))
+                
+            }
+        }
+    }
+    
+    var editEmail: some View {
+        NavigationView {
+            VStack (spacing: 0) {
+                TextField("Enter your email", text: $editedUser.Email)
+                    .frame(width: 300, height: 30)
+                    .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
+                
+                Divider()
+                    .frame(width: 300, height: 2)
+                    .background(editedUser.isEmailValid() ? Color("Green") : Color("VeryLightGrey"))
+            }
+        }
+    }
+    
+    
+    var editStudentID: some View {
+        NavigationView {
+            VStack (spacing: 0) {
+                TextField("Enter your Student ID", text: $editedUser.StudentID)
+                    .frame(width: 300, height: 30)
+                    .autocapitalization(.none)
+                    .keyboardType(.numbersAndPunctuation)
+                
+                Divider()
+                    .frame(width: 300, height: 2)
+                    .background(editedUser.isStudentIDValid() ? Color("Green") : Color("VeryLightGrey"))
+            }
+        }
+    }
+    
+    var editBatch: some View {
+        NavigationView {
+            VStack (spacing: 0) {
+                TextField("Enter your batch", text: $editedUser.Batch)
+                    .frame(width: 300, height: 30)
+                    .autocapitalization(.none)
+                    .keyboardType(.numbersAndPunctuation)
+                
+                Divider()
+                    .frame(width: 300, height: 2)
+                    .background(editedUser.isBatchValid() ? Color("Green") : Color("VeryLightGrey"))
+            }
+        }
     }
 }
 

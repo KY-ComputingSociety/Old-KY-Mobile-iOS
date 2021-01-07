@@ -95,7 +95,6 @@ struct CurrentView: View {
                 // NavigationLink to the full post page
                 NavigationLink(destination:
                                 PostFullView(thisPost: thisPost,
-                                             unEditedPost: thisPost.postToNewPost(),
                                              viewingType: .view)) {
                     // Post card
                     PostCardView(thisPost: thisPost)

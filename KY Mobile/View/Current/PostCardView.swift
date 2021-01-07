@@ -38,7 +38,7 @@ struct PostCardView: View {
                     if viewingType == .demo {
                         UIImageToImage(uiImage: demoCardImage).PostCardImage()
                     } else {
-                        UIImageToImage(uiImage: imageArchive.uiImageFromURL(id: thisPost.UUID, url: thisPost.Cover)).PostCardImage()
+                        UIImageToImage(uiImage: imageArchive.searchArchive(id: thisPost.UUID, url: thisPost.Cover)).PostCardImage()
                     }
                 }
                 
